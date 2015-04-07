@@ -29,9 +29,15 @@ function Deps(opts) {
     if (!opts) opts = {};
 
     this.basedir = opts.basedir || process.cwd();
-    this.includeSource = (opts.includeSource)
-        ? (opts.includeSource === 'true')
-        : true;
+    if (typeof opts.includeSource !== 'undefined') {
+        if (typeof opts.includeSource === 'string') {
+            this.includeSource = opts.includeSource === 'true';
+        } else {
+            this.includeSource = opts.includeSource;
+        }
+    } else {
+        this.includeSource = true;
+    }
     this.cache = opts.cache;
     this.pkgCache = opts.packageCache || {};
     this.pkgFileCache = {};
