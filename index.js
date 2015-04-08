@@ -19,6 +19,50 @@ var Transform = require('readable-stream').Transform;
 module.exports = Deps;
 inherits(Deps, Transform);
 
+// Taken from async-resolve:
+CORE_MODULES_LIST = {
+    '_debugger': true
+    , '_linklist': true
+    , '_stream_duplex': true
+    , '_stream_passthrough': true
+    , '_stream_readable': true
+    , '_stream_transform': true
+    , '_stream_writable': true
+    , 'assert': true
+    , 'buffer': true
+    , 'child_process': true
+    , 'cluster': true
+    , 'console': true
+    , 'constants': true
+    , 'crypto': true
+    , 'dgram': true
+    , 'dns': true
+    , 'domain': true
+    , 'events': true
+    , 'freelist': true
+    , 'fs': true
+    , 'http': true
+    , 'https': true
+    , 'module': true
+    , 'net': true
+    , 'os': true
+    , 'path': true
+    , 'punycode': true
+    , 'querystring': true
+    , 'readline': true
+    , 'repl': true
+    , 'stream': true
+    , 'string_decoder': true
+    , 'sys': true
+    , 'timers': true
+    , 'tls': true
+    , 'tty': true
+    , 'url': true
+    , 'util': true
+    , 'vm': true
+    , 'zlib': true
+};
+
 function Deps(opts) {
     var self = this;
     if (!(this instanceof Deps)) return new Deps(opts);
@@ -394,7 +438,7 @@ Deps.prototype.walk = function(id, parent, cb) {
         var resolved = {};
 
         deps.forEach(function(id) {
-            if (opts.filter && !opts.filter(id)) {
+            if (CORE_MODULES_LIST[id] || opts.filter && !opts.filter(id)) {
                 resolved[id] = false;
                 if (--p === 0) done();
                 return;
